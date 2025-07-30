@@ -1,5 +1,7 @@
 package com.todoapp.todo_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +21,7 @@ public class Users {
     @Column(nullable = false)
     @NotNull
     @Size(min = 6, message = "Password must be at least 6 characters long")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false, length = 50)

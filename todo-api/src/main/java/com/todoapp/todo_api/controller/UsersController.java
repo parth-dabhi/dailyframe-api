@@ -9,6 +9,7 @@ import com.todoapp.todo_api.service.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +24,9 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<Users> getUser(@RequestHeader("X-User-Email") String email) {
+    @GetMapping("/users/me")
+    public ResponseEntity<Users> getUser(Authentication authentication) {
+        String email = authentication.getName();
         Users user = usersService.findById(email);
         return ResponseEntity.ok(user);
     }
@@ -41,17 +43,20 @@ public class UsersController {
     }
 
     @GetMapping("/users/lists")
-    public ResponseEntity<List<Lists>> getUserLists(@RequestHeader("X-User-Email") String email) {
+    public ResponseEntity<List<Lists>> getUserLists(Authentication authentication) {
+        String email = authentication.getName();
         return ResponseEntity.ok(usersService.retrieveAllListOfUser(email));
     }
 
     @GetMapping("/users/routines")
-    public ResponseEntity<List<MyRoutine>> getAllMyRoutines(@RequestHeader("X-User-Email") String email) {
+    public ResponseEntity<List<MyRoutine>> getAllMyRoutines(Authentication authentication) {
+        String email = authentication.getName();
         return ResponseEntity.ok(usersService.getAllMyRoutines(email));
     }
     @PostMapping("/users/routines")
     public ResponseEntity<MyRoutine> createNewRoutines
-            (@RequestHeader("X-User-Email") String email, @RequestBody MyRoutineRequest myRoutineRequest) {
+            (Authentication authentication, @RequestBody MyRoutineRequest myRoutineRequest) {
+        String email = authentication.getName();
         MyRoutine responseMyRoutine = usersService.createNewRoutine(email, myRoutineRequest);
         return ResponseEntity.ok(responseMyRoutine);
     }

@@ -23,10 +23,6 @@ public class TodoController {
         Todo responseTodo = todoService.createNewTodoInList(request);
         return ResponseEntity.ok(responseTodo);
     }
-//    {
-//        "task": "Complete DSA practice",
-//            "listId": 2
-//    }
 
     @DeleteMapping("/todos/{id}")
     public ResponseEntity<String> deleteTodo(@PathVariable Long id) {

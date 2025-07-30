@@ -10,6 +10,8 @@ import com.todoapp.todo_api.repository.ListsRepository;
 import com.todoapp.todo_api.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,15 +25,20 @@ public class ListsService {
     @Autowired
     private UsersRepository usersRepository;
 
+    public String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName(); // this will be the email or username
+    }
+
     public List<Lists> getAllLists(String email) {
         return listsRepository.findAllByUserEmail(email);
     }
 
     public Lists createNewList(ListRequest request) {
-
-        Optional<Users> user = usersRepository.findById(request.getUserEmail());
+        String userEmail = getCurrentUserEmail();
+        Optional<Users> user = usersRepository.findById(userEmail);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found with email : " + request.getUserEmail());
+            throw new UserNotFoundException("User not found with email : " + userEmail);
         }
 
         return  listsRepository.save(createListInstance(request.getListName(), user.get()));
