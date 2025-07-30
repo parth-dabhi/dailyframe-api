@@ -7,7 +7,6 @@ import com.todoapp.todo_api.entity.Users;
 import com.todoapp.todo_api.exceptions.UserNotFoundException;
 import com.todoapp.todo_api.jwt.JwtTokenService;
 import com.todoapp.todo_api.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,23 +18,22 @@ import java.util.Optional;
 @Service("usersService")
 public class UsersService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
+    private final ListsService listsService;
+    private final MyRoutineService myRoutineService;
+    private final JwtTokenService jwtTokenService;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private ListsService listsService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private MyRoutineService myRoutinService;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UsersService(UsersRepository usersRepository, ListsService listsService, MyRoutineService myRoutinService, JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+        this.usersRepository = usersRepository;
+        this.listsService = listsService;
+        this.myRoutineService = myRoutinService;
+        this.jwtTokenService = jwtTokenService;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Users findById(String email) {
         Optional<Users> user = validateUser(email);
@@ -64,7 +62,7 @@ public class UsersService {
 
         usersRepository.save(user);
 
-        myRoutinService.createDefaultMyRoutine(user);
+        myRoutineService.createDefaultMyRoutine(user);
 
         System.out.println("Authenticating with raw password: " + rawPassword);
 
@@ -83,11 +81,11 @@ public class UsersService {
 
     public List<MyRoutine> getAllMyRoutines(String email) {
         validateUser(email);
-        return myRoutinService.getAllMyRoutinesOfUser(email);
+        return myRoutineService.getAllMyRoutinesOfUser(email);
     }
 
     public MyRoutine createNewRoutine(String email, MyRoutineRequest myRoutineRequest) {
         Users user = validateUser(email).get();
-        return myRoutinService.createNewRoutineOfUser(email, myRoutineRequest, user);
+        return myRoutineService.createNewRoutineOfUser(email, myRoutineRequest, user);
     }
 }

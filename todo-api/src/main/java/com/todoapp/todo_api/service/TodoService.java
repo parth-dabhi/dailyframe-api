@@ -15,10 +15,13 @@ import java.util.Optional;
 @Service("todoService")
 public class TodoService {
 
-    @Autowired
-    private TodoRepository todoRepository;
-    @Autowired
-    private ListsService listsService;
+    private final TodoRepository todoRepository;
+    private final ListsService listsService;
+
+    public TodoService(TodoRepository todoRepository, ListsService listsService) {
+        this.todoRepository = todoRepository;
+        this.listsService = listsService;
+    }
 
     public Todo createNewTodoInList(TodoRequest request) {
         return todoRepository.save(createTodoInstance(request.getDescription(), request.getTargetDate(),

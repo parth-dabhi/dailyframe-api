@@ -21,11 +21,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // This filter will intercept requests to check for JWT tokens
     // and validate them before allowing access to protected resources.
 
-    @Autowired
-    private JwtTokenService tokenService;
+    private final JwtTokenService tokenService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    public JwtAuthenticationFilter(JwtTokenService tokenService, CustomUserDetailsService customUserDetailsService) {
+        this.tokenService = tokenService;
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

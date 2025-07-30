@@ -14,8 +14,11 @@ import java.util.Optional;
 
 @Service("myRoutineService")
 public class MyRoutineService {
-    @Autowired
-    private MyRoutineRepository myRoutineRepository;
+    private final MyRoutineRepository myRoutineRepository;
+
+    public MyRoutineService(MyRoutineRepository myRoutineRepository) {
+        this.myRoutineRepository = myRoutineRepository;
+    }
 
     public void createDefaultMyRoutine(Users user) {
         // Create default routine for the user

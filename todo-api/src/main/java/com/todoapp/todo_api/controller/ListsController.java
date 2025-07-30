@@ -19,8 +19,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class ListsController {
 
-    @Autowired
-    private ListsService listsService;
+    private final ListsService listsService;
+
+    public ListsController(ListsService listsService) {
+        this.listsService = listsService;
+    }
 
     @PostMapping("/lists")
     public ResponseEntity<Lists> createList(@RequestBody @Valid ListRequest request) {

@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/routines")
 public class MyRoutineController {
 
-    @Autowired
-    private MyRoutineService myRoutineService;
+    private final MyRoutineService myRoutineService;
+
+    public MyRoutineController(MyRoutineService myRoutineService) {
+        this.myRoutineService = myRoutineService;
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<MyRoutine> updateMyRoutine(@PathVariable Long id, @RequestBody MyRoutineRequest myRoutineRequest) {

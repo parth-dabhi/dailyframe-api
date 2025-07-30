@@ -20,10 +20,13 @@ import java.util.Optional;
 @Service("listsService")
 public class ListsService {
 
-    @Autowired
-    private ListsRepository listsRepository;
-    @Autowired
-    private UsersRepository usersRepository;
+    private final ListsRepository listsRepository;
+    private final UsersRepository usersRepository;
+
+    public ListsService(ListsRepository listsRepository, UsersRepository usersRepository) {
+        this.listsRepository = listsRepository;
+        this.usersRepository = usersRepository;
+    }
 
     public String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
